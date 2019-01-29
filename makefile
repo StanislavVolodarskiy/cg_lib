@@ -9,5 +9,7 @@ clean:
 
 .PHONY: test
 test:
-	flake8
-	pytest -v -s --cov=cg_lib --cov-report=term-missing .
+	bash -ic "ac; flake8"
+	bash -ic "ac; pytest -v -s --cov=cg_lib --cov-report=term-missing ."
+	bash -ic "ac 3; flake8"
+	bash -ic "ac 3; pytest -v -s --cov=cg_lib --cov-report=term-missing ."

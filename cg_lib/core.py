@@ -19,6 +19,10 @@ def len2(a):
     return dot(a, a)
 
 
+def dist2(a, b):
+    return len2(sub(a, b))
+
+
 def cross(a, b):
     return a[0] * b[1] - a[1] * b[0]
 
