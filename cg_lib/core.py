@@ -3,6 +3,10 @@ def cross1(a):
     return -a[1], a[0]
 
 
+def mul(a, b):
+    return a[0] * b, a[1] * b
+
+
 def sub(a, b):
     return a[0] - b[0], a[1] - b[1]
 

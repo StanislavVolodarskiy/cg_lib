@@ -5,6 +5,10 @@ def test_cross1():
     assert core.cross1((1, 2)) == (-2, 1)
 
 
+def test_mul():
+    assert core.mul((2, 3), 5) == (10, 15)
+
+
 def test_sub():
     assert core.sub((4, 6), (3, 4)) == (1, 2)
 
@@ -21,6 +25,10 @@ def test_dot():
 
 def test_len2():
     assert core.len2((3, 4)) == 25
+
+
+def test_dist2():
+    assert core.dist2((3, 4), (5, 7)) == 13
 
 
 def test_cross():
