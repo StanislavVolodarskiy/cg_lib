@@ -1,8 +1,7 @@
-from cg_lib import convex_hull
+from cg_lib.convex_hull import graham
 
 
 def test_graham():
-    graham = convex_hull.graham
     assert graham([(0, 0)]) == [(0, 0)]
     assert graham([(0, 0), (0, 1)]) == [(0, 0), (0, 1)]
     assert graham([(0, 0), (1, 0), (0, 1)]) == \
