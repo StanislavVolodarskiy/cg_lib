@@ -74,3 +74,19 @@ def test_graham():
     assert graham(octagon) == octagon_min_hull
     assert graham(octagon, minimal=True) == octagon_min_hull
     assert graham(octagon, minimal=False) == octagon_max_hull
+
+    bug = [
+        (0, 1),
+        (2, 0),
+        (2, 1),
+        (1, 1)
+    ]
+    assert graham(bug, minimal=False) == bug
+
+    bug = [
+        (0, 0),
+        (1, 0),
+        (2, 0),
+        (2, 1)
+    ]
+    assert graham(bug, minimal=False) == bug

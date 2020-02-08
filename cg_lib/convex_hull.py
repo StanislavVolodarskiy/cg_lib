@@ -30,15 +30,32 @@ def graham(points, minimal=True):
     left = sorted_points[0]
     right = sorted_points[-1]
     below = GrahamScanner(ccw=True, minimal=minimal)
+    on_line = []
     above = GrahamScanner(ccw=False, minimal=minimal)
 
     above.append(left)
-    for p in sorted_points:
-        (below if area2(left, right, p) <= 0 else above).append(p)
+    on_line.append(left)
+    below.append(left)
+    for p in itertools.islice(sorted_points, 1, len(sorted_points) - 1):
+        a2 = area2(left, right, p)
+        if a2 < 0:
+            below.append(p)
+        if a2 > 0:
+            above.append(p)
+        if a2 == 0 and not minimal:
+            on_line.append(p)
     above.append(right)
+    on_line.append(right)
+    below.append(right)
 
-    below.stack.extend(itertools.islice(
-        reversed(above.stack), 1, len(above.stack) - 1
+    below_envelope = below.stack
+    above_envelope = above.stack
+    if len(below.stack) == 2:
+        below_envelope = on_line
+    elif len(above.stack) == 2:
+        above_envelope = on_line
+
+    below_envelope.extend(itertools.islice(
+        reversed(above_envelope), 1, len(above_envelope) - 1
     ))
-
-    return below.stack
+    return below_envelope
