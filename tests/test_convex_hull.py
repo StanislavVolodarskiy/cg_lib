@@ -2,34 +2,68 @@ from cg_lib.convex_hull import graham
 
 
 def test_graham():
-    assert graham([(0, 0)]) == [(0, 0)]
-    assert graham([(0, 0), (0, 1)]) == [(0, 0), (0, 1)]
-    assert graham([(0, 0), (1, 0), (0, 1)]) == \
+
+    def triple_test(src, dst, max_dst=None):
+        if max_dst is None:
+            max_dst = dst
+
+        def check(src, min_dst, max_dst):
+            assert graham(src) == min_dst
+            assert graham(src, minimal=True) == min_dst
+            assert graham(src, minimal=False) == max_dst
+
+        check(src, dst, max_dst)
+        check(tuple(src), dst, max_dst)
+
+        decor = {}
+        for p in src:
+            assert p not in decor
+            decor[p] = p[0], p[1], len(decor)
+
+        def decorate(points):
+            return [decor[p] for p in points]
+
+        dsrc = decorate(src)
+        ddst = decorate(dst)
+        dmax_dst = decorate(max_dst)
+
+        check(dsrc, ddst, dmax_dst)
+        check(tuple(dsrc), ddst, dmax_dst)
+
+    triple_test(
+        [],
+        []
+    )
+
+    triple_test(
+        [(0, 0)],
+        [(0, 0)]
+    )
+
+    triple_test(
+        [(0, 0), (0, 1)],
+        [(0, 0), (0, 1)]
+    )
+
+    triple_test(
+        [(0, 0), (1, 0), (0, 1)],
         [(0, 0), (1, 0), (0, 1)]
-    assert graham([(0, 0), (1, 0), (2, 0)]) == \
-        [(0, 0), (2, 0)]
-    assert graham([(0, 0), (1, 0), (2, 0)], minimal=False) == \
-        [(0, 0), (1, 0), (2, 0)]
+    )
+
+    triple_test(
+        [(0, 0), (1, 0), (2, 0)],
+        [(0, 0), (2, 0)],
+        [(0, 0), (1, 0), (2, 0), (1, 0)]
+    )
 
     def line(x1, x2, y):
         return [(x, y) for x in range(x1, x2 + 1)]
 
-    square = line(0, 2, 0) + line(0, 2, 1) + line(0, 2, 2)
-    square_min_hull = [(0, 0), (2, 0), (2, 2), (0, 2)]
-    square_max_hull = [
-        (0, 0),
-        (1, 0),
-        (2, 0),
-        (2, 1),
-        (2, 2),
-        (1, 2),
-        (0, 2),
-        (0, 1)
-    ]
-
-    assert graham(square) == square_min_hull
-    assert graham(square, minimal=True) == square_min_hull
-    assert graham(square, minimal=False) == square_max_hull
+    triple_test(
+        line(0, 2, 0) + line(0, 2, 1) + line(0, 2, 2),
+        [(0, 0), (2, 0), (2, 2), (0, 2)],
+        [(0, 0), (1, 0), (2, 0), (2, 1), (2, 2), (1, 2), (0, 2), (0, 1)]
+    )
 
     octagon = (
         line(2, 4, 0) +
@@ -70,22 +104,20 @@ def test_graham():
         (0, 3)
     ]
 
-    assert graham(octagon) == octagon_min_hull
-    assert graham(octagon, minimal=True) == octagon_min_hull
-    assert graham(octagon, minimal=False) == octagon_max_hull
+    triple_test(
+        octagon,
+        octagon_min_hull,
+        octagon_max_hull
+    )
 
-    bug = [
-        (0, 1),
-        (2, 0),
-        (2, 1),
-        (1, 1)
-    ]
-    assert graham(bug, minimal=False) == bug
+    triple_test(
+        [(0, 1), (2, 0), (2, 1), (1, 1)],
+        [(0, 1), (2, 0), (2, 1)],
+        [(0, 1), (2, 0), (2, 1), (1, 1)]
+    )
 
-    bug = [
-        (0, 0),
-        (1, 0),
-        (2, 0),
-        (2, 1)
-    ]
-    assert graham(bug, minimal=False) == bug
+    triple_test(
+        [(0, 0), (1, 0), (2, 0), (2, 1)],
+        [(0, 0), (2, 0), (2, 1)],
+        [(0, 0), (1, 0), (2, 0), (2, 1)]
+    )
