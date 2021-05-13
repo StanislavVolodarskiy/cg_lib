@@ -1,3 +1,6 @@
+def neg(a):
+    return -a[0], -a[1]
+
 
 def cross1(a):
     return -a[1], a[0]

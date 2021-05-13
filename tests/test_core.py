@@ -5,6 +5,10 @@ def test_cross1():
     assert core.cross1((1, 2)) == (-2, 1)
 
 
+def test_neg():
+    assert core.neg((1, 2)) == (-1, -2)
+
+
 def test_mul():
     assert core.mul((2, 3), 5) == (10, 15)
 
