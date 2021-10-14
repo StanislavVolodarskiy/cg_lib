@@ -1,5 +1,3 @@
-from six.moves import range, zip
-
 from cg_lib import utils
 
 
