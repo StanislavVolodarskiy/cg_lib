@@ -46,3 +46,75 @@ def graham(points, minimal=True):
     scanner.clean(sorted_points[0])
 
     return scanner.stack
+
+
+def farthest(left, right, points):
+    d = sub(right, left)
+
+    def cmp_(p1, p2):
+        p12 = sub(p2, p1)
+        a = cross(d, p12)
+        if a < 0:
+            return -1
+        if a > 0:
+            return 1
+        b = dot(d, p12)
+        if b < 0:
+            return -1
+        if b > 0:
+            return 1
+        return 0
+
+    return max(points, key=functools.cmp_to_key(cmp_))
+
+
+def partition(left, top, right, points):
+    lpoints = []
+    rpoints = []
+    for p in points:
+        # TODO: performance
+        if area2(left, top, p) > 0:
+            lpoints.append(p)
+        # TODO: performance
+        elif area2(top, right, p) > 0:
+            rpoints.append(p)
+    return lpoints, rpoints
+
+
+def envelope(hull, left, right, points):
+    top = farthest(left, right, points)
+    lpoints, rpoints = partition(left, top, right, points)
+    envelope(hull, top, right, rpoints)
+    hull.append(top)
+    envelope(hull, left, top, lpoints)
+
+
+def select_points(points, p1, p2):
+    left = []
+    right = []
+    for p in points:
+        # TODO: performance
+        a = area2(p1, p2, p)
+        if a > 0:
+            left.append(p)
+        elif a < 0:
+            right.append(p)
+    return left, right
+
+
+def quick_hull_minimal(points):
+
+    if len(points) <= 0:
+        return []
+
+    left = min(points)
+    right = max(points)
+
+    below, above = select_points(points, left, right)
+    hull = [left]
+    envelope(hull, left, right, below)
+    hull.append(right)
+    envelope(hull, right, left, above)
+    return hull
+
+
